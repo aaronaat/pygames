@@ -63,6 +63,20 @@ wn.onkeypress(paddle_a_down, 's')
 wn.onkeypress(paddle_b_up, 'Up')
 wn.onkeypress(paddle_b_down, 'Down')
 
+#score
+score_a = 0
+score_b = 0 
+
+# pen
+pen = turtle.Turtle()
+pen.speed(0)
+pen.color('white')
+pen.penup()
+pen.hideturtle()
+pen.goto(0,220)
+pen.write('Player A: {}  Player B: {}'.format(score_a, score_b), align='center', font=('Courier', 13, 'bold'))
+
+
 
 # main loop
 while True:
@@ -83,16 +97,26 @@ while True:
 
     if ball.xcor() > 370:
         ball.goto(0,0)
+        score_a += 1
         ball.dx *= -1
+        pen.clear()
+        pen.write('Player A: {}  Player B: {}'.format(score_a, score_b), align='center', font=('Courier', 13, 'bold'))
+
 
     if ball.xcor() < -370:
         ball.goto(0,0)
+        score_b += 1
         ball.dx *= -1
+        pen.clear()
+        pen.write('Player A: {}  Player B: {}'.format(score_a, score_b), align='center', font=('Courier', 13, 'bold'))
+
 
     # paddle/ball collisions
     if (ball.xcor() > 320 and ball.xcor() < 330) and (ball.ycor() < paddle_b.ycor() + 40 and ball.ycor() > paddle_b.ycor() - 40):
+        ball.setx(320)
         ball.dx *= -1
     
     if (ball.xcor() < -320 and ball.xcor() > -330) and (ball.ycor() < paddle_a.ycor() + 40 and ball.ycor() > paddle_a.ycor() - 40):
+        ball.setx(-320)
         ball.dx *= -1
     
