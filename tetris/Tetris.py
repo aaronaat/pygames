@@ -157,7 +157,17 @@ def create_grid(locked_positions={}):
     return grid
 
 def convert_shape_format(shape):
-    pass
+    positions = []
+    format = shape.shape[shape.rotation % len(shape.shape)]
+
+    for i, line in enumerate(format):
+        row = list(line)
+        for j, column in enumerate(row):
+            if column == '0':
+                posititions.append((shape.x + j, shape.y + i))
+
+    for i, pos in enumerate(positions):
+        positions[i] = (pos[0] - 2, pos[1] - 4)
  
 def valid_space(shape, grid):
     pass
@@ -172,20 +182,15 @@ def get_shape():
 def draw_text_middle(text, size, color, surface):
     pass
    
-def draw_grid(surface, row, col):
-    surface.fill((0,0,0))
-
-    pygame.font.init()
-    font = pygame.font.SysFont('courier', 44)
-    label = font.render('Tetris', 1, (255,255,255))
-
-    surface.blit(label, (top_left_x + play_width/2 - (label.get_width()/2), 30))
+def draw_grid(surface, grid):
+    sx = top_left_x
+    sy = top_left_y
 
     for i in range(len(grid)):
+        pygame.draw.line(surface,(128, 128,128), (sx, sy + i*block_size), (sx + play_width, sy + i*block_size))
         for j in range(len(grid[i])):
-            pygame.draw.rect(surface, grid[i][j], (top_left_x + j*block_size, top_left_y + i*block_size), 0)
+            pygame.draw.line(surface,(128, 128,128), (sx + j*block_size, sy), (sx + j*block_size, sy + play_height))
 
-    pygame.draw.rect(surface, (255,0,0), (top_left_x, top_left_y, play_width, play_height), 4)
 
  
 def clear_rows(grid, locked):
@@ -203,10 +208,16 @@ def draw_window(surface, grid):
 
     surface.blit(label, (top_left_x + play_width/2 - (label.get_width()/2), 30))
 
+    for i in range(len(grid)):
+        for j in range(len(grid[i])):
+            pygame.draw.rect(surface, grid[i][j], (top_left_x + j*block_size, top_left_y + i*block_size), 0)
+
+    pygame.draw.rect(surface, (255,0,0), (top_left_x, top_left_y, play_width, play_height), 4)
+
     draw_grid(surface, grid)
     pygame.display.update()
  
-def main():
+def main(win):
     
     locked_positions = {}
     grid = create_grid(locked_positions)
@@ -245,8 +256,8 @@ def main():
 
         draw_window(surface, grid)
  
-def main_menu():
-    pass
+def main_menu(win):
+    main(win)
 
 win = pygame.display.set_mode((s_width, s_height))
 main_menu()  # start game
