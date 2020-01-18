@@ -151,8 +151,8 @@ def create_grid(locked_positions={}):
 
     for i in range(len(grid)):
         for j in range(len(grid[i])):
-            if (j, i) in locked_pos:
-                c = locked_pos[(j,i)]
+            if (j, i) in locked_positions:
+                c = locked_positions[(j,i)]
                 grid[i][j] = c
     return grid
 
@@ -168,6 +168,8 @@ def convert_shape_format(shape):
 
     for i, pos in enumerate(positions):
         positions[i] = (pos[0] - 2, pos[1] - 4)
+
+    return positions
  
 def valid_space(shape, grid):
 
@@ -179,13 +181,14 @@ def valid_space(shape, grid):
     #####
     ####   ie; [[(0,1)], [(2,3)]]  -->  [(0,1), (2,3)]
     ###
+
     formatted = convert_shape_format(shape)
     
     for pos in formatted:
-        if_pos not in accepted_pos:
+        if pos not in accepted_pos:
             if pos[1] > -1:
                 return False
-        return True
+    return True
 
 
 def check_lost(positions):
@@ -246,7 +249,7 @@ def main(win):
     run = True
     current_piece = get_shape()
     clock = pygame.time.Clock()
-    falle_time = 0
+    fall_time = 0
 
     while run:
 
@@ -271,12 +274,12 @@ def main(win):
                 if event.key == pygame.K_LEFT:
                     current_piece.x -= 1
                     if not(valid_space(current_piece, grid)):
-                        current_piece += 1
+                        current_piece.x += 1
 
                 if event.key == pygame.K_RIGHT:
                     current_piece.x += 1
                     if not(valid_space(current_piece, grid)):
-                        current_piece -= 1
+                        current_piece.x -= 1
 
                 if event.key == pygame.K_DOWN:
                     current_piece.y += 1
@@ -286,7 +289,7 @@ def main(win):
                 if event.key == pygame.K_UP:
                     current_piece.rotation -= 1
                     if not(valid_space(current_piece, grid)):
-                        current_piece.y -= 1
+                        current_piece.rotation -= 1
 
         # check position of piece moving down
         shape_pos = convert_shape_format(current_piece)
@@ -309,7 +312,7 @@ def main(win):
 
         draw_window(surface, grid)
 
-        if check_lost(lost_positions):
+        if check_lost(locked_positions):
             run = False
 
     pygame.display.quit()
@@ -319,4 +322,4 @@ def main_menu(win):
     main(win)
 
 win = pygame.display.set_mode((s_width, s_height))
-main_menu()  # start game
+main_menu(win)  # start game
