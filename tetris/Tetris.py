@@ -164,7 +164,7 @@ def convert_shape_format(shape):
         row = list(line)
         for j, column in enumerate(row):
             if column == '0':
-                posititions.append((shape.x + j, shape.y + i))
+                positions.append((shape.x + j, shape.y + i))
 
     for i, pos in enumerate(positions):
         positions[i] = (pos[0] - 2, pos[1] - 4)
@@ -229,11 +229,11 @@ def draw_window(surface, grid):
     font = pygame.font.SysFont('courier', 44)
     label = font.render('Tetris', 1, (255,255,255))
 
-    surface.blit(label, (top_left_x + play_width/2 - (label.get_width()/2), 30))
+    surface.blit(label, (top_left_x + play_width / 2 - (label.get_width()/2), 30))
 
     for i in range(len(grid)):
         for j in range(len(grid[i])):
-            pygame.draw.rect(surface, grid[i][j], (top_left_x + j*block_size, top_left_y + i*block_size), 0)
+            pygame.draw.rect(surface, grid[i][j], (top_left_x + j*30, top_left_y + i*30, 30, 30), 0)
 
     pygame.draw.rect(surface, (255,0,0), (top_left_x, top_left_y, play_width, play_height), 4)
 
@@ -252,6 +252,7 @@ def main(win):
     fall_time = 0
 
     while run:
+        fall_speed = 0.27
 
         grid = create_grid(locked_positions)
 
@@ -310,7 +311,7 @@ def main(win):
             next_piece = get_shape()
             change_piece = False   
 
-        draw_window(surface, grid)
+        draw_window(win, grid)
 
         if check_lost(locked_positions):
             run = False
